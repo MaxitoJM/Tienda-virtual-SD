@@ -2,7 +2,6 @@
 # Reproduce la arquitectura desplegada en AWS:
 #   MySQL (RDS) + backend Spring Boot (Elastic Beanstalk Java)
 #   + frontend WAR sobre Tomcat 9 (Elastic Beanstalk Tomcat)
-version: "3.8"
 
 services:
 

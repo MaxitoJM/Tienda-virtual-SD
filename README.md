@@ -55,6 +55,11 @@ docker compose up --build
 
 Levanta MySQL 8.0.24, el backend y Tomcat 9 con el frontend ya desplegado.
 
+> **Requisito en Windows.** Docker Desktop necesita el subsistema WSL 2 con una
+> distribución instalada. Si `docker compose up` no responde, ejecute en una terminal
+> de PowerShell **como administrador** `wsl --install`, reinicie el equipo y vuelva a
+> abrir Docker Desktop. Mientras tanto, use la Opción 2 o la Opción 3.
+
 ### Opción 2 — Ejecución manual
 
 **1. Base de datos.** MySQL 8 en `localhost:3306` con una base `tiendagenerica`.
