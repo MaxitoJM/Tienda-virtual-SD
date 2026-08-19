@@ -110,7 +110,16 @@ cd AppBackend && ./mvnw test
 51 pruebas automatizadas que cubren los 43 casos del conjunto de pruebas QA del
 documento. Cada método de prueba lleva el identificador de su caso
 (`sp1QA3_creacionDeUsuarioCorrecta`, `sp4QA9_validacionDelTotalConIva`, …).
-No requieren MySQL: usan H2 en modo de compatibilidad MySQL.
+Por defecto usan H2 en modo de compatibilidad MySQL, así que no requieren MySQL.
+
+El mismo conjunto puede ejecutarse contra una instancia real de MySQL 8:
+
+```bash
+cd AppBackend && ./mvnw test -DargLine="-Dspring.profiles.active=mysql"
+```
+
+Usa la base de datos `tiendagenerica_test`, independiente de la de trabajo.
+Verificado sobre MySQL 8.0.24: 51 pruebas, 0 fallos.
 
 ## Primer recorrido por el sistema
 

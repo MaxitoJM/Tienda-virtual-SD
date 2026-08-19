@@ -6,12 +6,28 @@ que el conjunto de pruebas QA se autoverifica en cada compilación.
 
 ## Ejecución
 
+### Contra H2 (por defecto)
+
 ```bash
 cd AppBackend && ./mvnw test
 ```
 
-Las pruebas usan **H2 en modo de compatibilidad MySQL**, por lo que no requieren una
-instancia de MySQL en ejecución. Resultado esperado: **51 pruebas, 0 fallos**.
+Usa **H2 en modo de compatibilidad MySQL**, por lo que no requiere una instancia de
+MySQL en ejecución. Resultado esperado: **51 pruebas, 0 fallos**.
+
+### Contra MySQL 8 real
+
+```bash
+cd AppBackend && ./mvnw test -DargLine="-Dspring.profiles.active=mysql"
+```
+
+Ejecuta el mismo conjunto de pruebas contra una instancia real de MySQL 8, usando la
+base de datos `tiendagenerica_test` (se crea y se destruye en cada ejecución, de modo
+que no toca los datos de `tiendagenerica`). La configuración está en
+`src/test/resources/application-mysql.properties` y admite las variables de entorno
+`DB_HOST`, `DB_PORT`, `DB_USER` y `DB_PASSWORD`.
+
+Resultado verificado sobre **MySQL 8.0.24**: **51 pruebas, 0 fallos**.
 
 ## Sprint 1 — Login y Usuarios
 
