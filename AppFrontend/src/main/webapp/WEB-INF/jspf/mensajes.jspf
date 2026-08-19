@@ -1,0 +1,15 @@
+<c:if test="${not empty info}">
+    <div class="mensaje info"><c:out value="${info}"/></div>
+</c:if>
+<c:if test="${not empty error}">
+    <div class="mensaje error">
+        <c:out value="${error}"/>
+        <c:if test="${not empty errores}">
+            <ul>
+                <c:forEach var="detalle" items="${errores}">
+                    <li><c:out value="${detalle}"/></li>
+                </c:forEach>
+            </ul>
+        </c:if>
+    </div>
+</c:if>

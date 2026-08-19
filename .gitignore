@@ -1,0 +1,25 @@
+# Herramientas locales (JDK 11 / Maven portables)
+.tools/
+
+# Build
+target/
+*.jar
+*.war
+*.class
+
+# IDE
+.settings/
+.project
+.classpath
+.idea/
+*.iml
+bin/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs y datos locales
+*.log
+datos-mysql/
+datos-h2/
