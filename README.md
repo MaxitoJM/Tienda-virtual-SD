@@ -162,6 +162,23 @@ Verificado sobre MySQL 8.0.24: 51 pruebas, 0 fallos.
 | [07 · Despliegue en AWS](docs/07-despliegue-aws.md) | EC2, RDS y Elastic Beanstalk |
 | [08 · Repositorios GitHub](docs/08-repositorios-github.md) | Ambientes de desarrollo y producción |
 
+### Documento de entrega
+
+El documento formal del proyecto, con la especificación completa, las historias de
+usuario, el plan de pruebas con resultados, el modelo de datos, la especificación de
+la API y los anexos con las evidencias de ejecución:
+
+- [Tienda-Generica-Virtual-Documento-de-Entrega.pdf](docs/Tienda-Generica-Virtual-Documento-de-Entrega.pdf)
+- [Tienda-Generica-Virtual-Documento-de-Entrega.docx](docs/Tienda-Generica-Virtual-Documento-de-Entrega.docx)
+
+### Otros recursos
+
+| Recurso | Contenido |
+|---|---|
+| [Colección de Postman](postman/) | 38 peticiones de la API organizadas por sprint |
+| [Diagramas](docs/diagramas/) | Arquitectura, modelo entidad-relación y flujo de venta |
+| [Evidencias](docs/evidencias/) | Capturas del sistema en ejecución |
+
 ## Decisiones de implementación
 
 - **Contraseñas cifradas con BCrypt** y enmascaradas en las respuestas de la API.
