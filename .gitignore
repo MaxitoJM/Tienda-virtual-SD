@@ -23,3 +23,7 @@ Thumbs.db
 *.log
 datos-mysql/
 datos-h2/
+
+# Artefactos de despliegue generados
+despliegue/*.zip
+despliegue/*.war

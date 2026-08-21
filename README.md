@@ -58,8 +58,9 @@ Conforme a la Parte 4 del documento de especificación:
 Si las herramientas portables están en la carpeta `.tools/`, basta con:
 
 ```
-iniciar.bat     levanta MySQL, el backend y Tomcat, y abre el navegador
-detener.bat     detiene los tres servicios
+iniciar.bat        levanta MySQL, el backend y Tomcat, y abre el navegador
+detener.bat        detiene los tres servicios
+empaquetar-aws.bat genera los artefactos listos para Elastic Beanstalk
 ```
 
 Los scripts compilan el proyecto la primera vez si aún no existen los artefactos.
@@ -182,6 +183,7 @@ Y la presentación de sustentación del proyecto:
 | [Colección de Postman](postman/) | 38 peticiones de la API organizadas por sprint |
 | [Diagramas](docs/diagramas/) | Arquitectura, modelo entidad-relación, flujo de venta y diagrama de clases |
 | [Evidencias](docs/evidencias/) | Capturas del sistema en ejecución |
+| [Despliegue](despliegue/LEEME.md) | Guía de publicación en AWS Elastic Beanstalk |
 
 ## Decisiones de implementación
 

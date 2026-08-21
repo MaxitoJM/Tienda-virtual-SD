@@ -105,7 +105,29 @@ server.port=5000
 > `server.port=5000` es obligatorio: es el puerto por el que Elastic Beanstalk
 > enruta las peticiones hacia una aplicación Java SE.
 
-## 7. Generación y carga del backend (.JAR)
+## 7. Generación de los artefactos
+
+El proyecto incluye un guion que compila las dos aplicaciones, ejecuta el conjunto de
+pruebas y deja los artefactos listos para subir, con la configuración de
+`.ebextensions` ya incorporada:
+
+```
+empaquetar-aws.bat
+```
+
+Genera en la carpeta `despliegue/`:
+
+| Artefacto | Entorno |
+|---|---|
+| `appbackend-eb.zip` | Plataforma Java |
+| `ciclo3demo.war` | Plataforma Tomcat |
+
+El detalle de las propiedades que hay que definir en cada entorno está en
+[`despliegue/LEEME.md`](../despliegue/LEEME.md).
+
+Quien prefiera hacerlo manualmente puede seguir los pasos siguientes.
+
+## 7.1. Generación y carga del backend (.JAR)
 
 ```bash
 cd AppBackend
