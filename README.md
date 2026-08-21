@@ -180,7 +180,7 @@ Y la presentación de sustentación del proyecto:
 | Recurso | Contenido |
 |---|---|
 | [Colección de Postman](postman/) | 38 peticiones de la API organizadas por sprint |
-| [Diagramas](docs/diagramas/) | Arquitectura, modelo entidad-relación y flujo de venta |
+| [Diagramas](docs/diagramas/) | Arquitectura, modelo entidad-relación, flujo de venta y diagrama de clases |
 | [Evidencias](docs/evidencias/) | Capturas del sistema en ejecución |
 
 ## Decisiones de implementación

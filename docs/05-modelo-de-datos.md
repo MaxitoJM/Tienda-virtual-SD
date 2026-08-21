@@ -120,6 +120,22 @@ erDiagram
 | `valoriva` | DOUBLE | IVA calculado para la línea |
 | `valor_total` | DOUBLE | cantidad × valor unitario |
 
+## Diagrama de clases
+
+Organización del backend en capas, con las clases representativas de cada una:
+
+![Diagrama de clases](diagramas/04-diagrama-de-clases.png)
+
+| Capa | Responsabilidad |
+|---|---|
+| Control | Expone la API REST. No contiene lógica de negocio: delega en la capa de servicio. |
+| Servicio | Concentra las validaciones y las reglas de negocio, y define los límites transaccionales. |
+| Persistencia | Interfaces de Spring Data JPA. El framework genera la implementación a partir del nombre del método. |
+| Modelo | Entidades JPA, una por cada tabla de la base de datos. |
+
+Los módulos de clientes, proveedores y detalle de ventas siguen exactamente la misma
+estructura, por lo que se omiten del diagrama para mantenerlo legible.
+
 ## Generación del esquema
 
 El esquema lo genera Hibernate mediante `spring.jpa.hibernate.ddl-auto=update`,
