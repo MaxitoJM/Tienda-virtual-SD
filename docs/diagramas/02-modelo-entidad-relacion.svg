@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="700" viewBox="0 0 1080 700" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="1080" height="700" fill="#ffffff"/>
+  <text x="540" y="38" text-anchor="middle" font-size="22" fill="#1f2937">Modelo Entidad-Relación</text>
+  <text x="540" y="60" text-anchor="middle" font-size="13" fill="#6b7280">Base de datos tiendagenerica — MySQL 8.0.24</text>
+
+  <g font-size="12">
+    <!-- clientes -->
+    <rect x="40" y="96" width="250" height="150" rx="5" fill="#ffffff" stroke="#3b82f6" stroke-width="1.4"/>
+    <rect x="40" y="96" width="250" height="28" rx="5" fill="#3b82f6"/>
+    <text x="54" y="115" fill="#ffffff" font-size="13.5">clientes</text>
+    <text x="54" y="143" fill="#b45309">PK</text><text x="80" y="143" fill="#111827">cedula_cliente</text><text x="234" y="143" fill="#9ca3af">BIGINT</text>
+    <text x="80" y="164" fill="#374151">nombre_cliente</text><text x="222" y="164" fill="#9ca3af">VARCHAR</text>
+    <text x="80" y="185" fill="#374151">direccion_cliente</text><text x="222" y="185" fill="#9ca3af">VARCHAR</text>
+    <text x="80" y="206" fill="#374151">telefono_cliente</text><text x="222" y="206" fill="#9ca3af">VARCHAR</text>
+    <text x="80" y="227" fill="#374151">email_cliente</text><text x="222" y="227" fill="#9ca3af">VARCHAR</text>
+
+    <!-- usuarios -->
+    <rect x="40" y="440" width="250" height="150" rx="5" fill="#ffffff" stroke="#3b82f6" stroke-width="1.4"/>
+    <rect x="40" y="440" width="250" height="28" rx="5" fill="#3b82f6"/>
+    <text x="54" y="459" fill="#ffffff" font-size="13.5">usuarios</text>
+    <text x="54" y="487" fill="#b45309">PK</text><text x="80" y="487" fill="#111827">cedula_usuario</text><text x="234" y="487" fill="#9ca3af">BIGINT</text>
+    <text x="80" y="508" fill="#374151">nombre_usuario</text><text x="222" y="508" fill="#9ca3af">VARCHAR</text>
+    <text x="80" y="529" fill="#374151">email_usuario</text><text x="222" y="529" fill="#9ca3af">VARCHAR</text>
+    <text x="80" y="550" fill="#374151">usuario</text><text x="222" y="550" fill="#9ca3af">VARCHAR</text>
+    <text x="80" y="571" fill="#374151">password</text><text x="222" y="571" fill="#9ca3af">VARCHAR</text>
+
+    <!-- ventas -->
+    <rect x="415" y="96" width="250" height="171" rx="5" fill="#ffffff" stroke="#8b5cf6" stroke-width="1.4"/>
+    <rect x="415" y="96" width="250" height="28" rx="5" fill="#8b5cf6"/>
+    <text x="429" y="115" fill="#ffffff" font-size="13.5">ventas</text>
+    <text x="429" y="143" fill="#b45309">PK</text><text x="455" y="143" fill="#111827">codigo_venta</text><text x="609" y="143" fill="#9ca3af">BIGINT</text>
+    <text x="429" y="164" fill="#0ea5e9">FK</text><text x="455" y="164" fill="#374151">cedula_cliente</text><text x="609" y="164" fill="#9ca3af">BIGINT</text>
+    <text x="429" y="185" fill="#0ea5e9">FK</text><text x="455" y="185" fill="#374151">cedula_usuario</text><text x="609" y="185" fill="#9ca3af">BIGINT</text>
+    <text x="455" y="206" fill="#374151">valor_venta</text><text x="605" y="206" fill="#9ca3af">DOUBLE</text>
+    <text x="455" y="227" fill="#374151">ivaventa</text><text x="605" y="227" fill="#9ca3af">DOUBLE</text>
+    <text x="455" y="248" fill="#374151">total_venta</text><text x="605" y="248" fill="#9ca3af">DOUBLE</text>
+
+    <!-- detalle_ventas -->
+    <rect x="415" y="418" width="250" height="192" rx="5" fill="#ffffff" stroke="#8b5cf6" stroke-width="1.4"/>
+    <rect x="415" y="418" width="250" height="28" rx="5" fill="#8b5cf6"/>
+    <text x="429" y="437" fill="#ffffff" font-size="13.5">detalle_ventas</text>
+    <text x="429" y="465" fill="#b45309">PK</text><text x="455" y="465" fill="#111827">codigo_detalle_venta</text><text x="609" y="465" fill="#9ca3af" font-size="11">BIGINT</text>
+    <text x="429" y="486" fill="#0ea5e9">FK</text><text x="455" y="486" fill="#374151">codigo_venta</text><text x="609" y="486" fill="#9ca3af">BIGINT</text>
+    <text x="429" y="507" fill="#0ea5e9">FK</text><text x="455" y="507" fill="#374151">codigo_producto</text><text x="609" y="507" fill="#9ca3af">BIGINT</text>
+    <text x="455" y="528" fill="#374151">cantidad_producto</text><text x="627" y="528" fill="#9ca3af">INT</text>
+    <text x="455" y="549" fill="#374151">valor_venta</text><text x="605" y="549" fill="#9ca3af">DOUBLE</text>
+    <text x="455" y="570" fill="#374151">valoriva</text><text x="605" y="570" fill="#9ca3af">DOUBLE</text>
+    <text x="455" y="591" fill="#374151">valor_total</text><text x="605" y="591" fill="#9ca3af">DOUBLE</text>
+
+    <!-- proveedores -->
+    <rect x="790" y="96" width="250" height="150" rx="5" fill="#ffffff" stroke="#10b981" stroke-width="1.4"/>
+    <rect x="790" y="96" width="250" height="28" rx="5" fill="#10b981"/>
+    <text x="804" y="115" fill="#ffffff" font-size="13.5">proveedores</text>
+    <text x="804" y="143" fill="#b45309">PK</text><text x="830" y="143" fill="#111827">nitproveedor</text><text x="984" y="143" fill="#9ca3af">BIGINT</text>
+    <text x="830" y="164" fill="#374151">nombre_proveedor</text><text x="972" y="164" fill="#9ca3af">VARCHAR</text>
+    <text x="830" y="185" fill="#374151">direccion_proveedor</text><text x="972" y="185" fill="#9ca3af">VARCHAR</text>
+    <text x="830" y="206" fill="#374151">telefono_proveedor</text><text x="972" y="206" fill="#9ca3af">VARCHAR</text>
+    <text x="830" y="227" fill="#374151">ciudad_proveedor</text><text x="972" y="227" fill="#9ca3af">VARCHAR</text>
+
+    <!-- productos -->
+    <rect x="790" y="440" width="250" height="171" rx="5" fill="#ffffff" stroke="#10b981" stroke-width="1.4"/>
+    <rect x="790" y="440" width="250" height="28" rx="5" fill="#10b981"/>
+    <text x="804" y="459" fill="#ffffff" font-size="13.5">productos</text>
+    <text x="804" y="487" fill="#b45309">PK</text><text x="830" y="487" fill="#111827">codigo_producto</text><text x="984" y="487" fill="#9ca3af">BIGINT</text>
+    <text x="804" y="508" fill="#0ea5e9">FK</text><text x="830" y="508" fill="#374151">nitproveedor</text><text x="984" y="508" fill="#9ca3af">BIGINT</text>
+    <text x="830" y="529" fill="#374151">nombre_producto</text><text x="972" y="529" fill="#9ca3af">VARCHAR</text>
+    <text x="830" y="550" fill="#374151">precio_compra</text><text x="978" y="550" fill="#9ca3af">DOUBLE</text>
+    <text x="830" y="571" fill="#374151">ivacompra</text><text x="978" y="571" fill="#9ca3af">DOUBLE</text>
+    <text x="830" y="592" fill="#374151">precio_venta</text><text x="978" y="592" fill="#9ca3af">DOUBLE</text>
+  </g>
+
+  <!-- relaciones -->
+  <g stroke="#9ca3af" stroke-width="1.4" fill="none">
+    <path d="M290 165 L415 165"/>
+    <path d="M290 490 L350 490 L350 190 L415 190"/>
+    <path d="M540 267 L540 418"/>
+    <path d="M665 507 L727 507 L727 520 L790 520"/>
+    <path d="M915 246 L915 440"/>
+  </g>
+  <g font-size="11" fill="#6b7280">
+    <text x="316" y="159">1</text><text x="396" y="159">N</text>
+    <text x="356" y="207">1</text><text x="396" y="184">N</text>
+    <text x="545" y="288">1</text><text x="545" y="410">N</text>
+    <text x="676" y="501">N</text><text x="770" y="514">1</text>
+    <text x="900" y="266">1</text><text x="900" y="432">N</text>
+  </g>
+
+  <!-- leyenda -->
+  <g font-size="11.5">
+    <rect x="40" y="640" width="1000" height="34" rx="4" fill="#f9fafb" stroke="#e5e7eb"/>
+    <text x="56" y="662" fill="#b45309">PK</text><text x="80" y="662" fill="#4b5563">clave primaria</text>
+    <text x="190" y="662" fill="#0ea5e9">FK</text><text x="214" y="662" fill="#4b5563">clave foránea</text>
+    <text x="330" y="662" fill="#4b5563">Todos los campos VARCHAR son de longitud 255. codigo_venta y codigo_detalle_venta son consecutivos (AUTO_INCREMENT).</text>
+  </g>
+</svg>

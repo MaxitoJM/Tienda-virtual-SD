@@ -1,5 +1,11 @@
 # Tienda Genérica Virtual
 
+[![Integracion Continua](https://github.com/MaxitoJM/Tienda-virtual-SD/actions/workflows/ci.yml/badge.svg)](https://github.com/MaxitoJM/Tienda-virtual-SD/actions/workflows/ci.yml)
+[![Java](https://img.shields.io/badge/Java-11-007396)](https://adoptium.net/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.4.5-6DB33F)](https://spring.io/projects/spring-boot)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0.24-4479A1)](https://www.mysql.com/)
+[![Pruebas](https://img.shields.io/badge/pruebas-51%20QA-success)](docs/04-plan-de-pruebas.md)
+
 Software para gestionar las transacciones comerciales de una tienda de propósito
 general: usuarios, clientes, proveedores, productos, ventas y reportes.
 

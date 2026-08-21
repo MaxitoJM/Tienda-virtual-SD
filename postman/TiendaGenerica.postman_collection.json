@@ -1,0 +1,953 @@
+{
+  "info": {
+    "name": "Tienda Generica Virtual - API REST",
+    "description": "Coleccion completa de la API del backend de la Tienda Generica Virtual.\n\nConfigure la variable base_url segun el entorno:\n  - Local:  http://localhost:5000\n  - AWS:    http://<entorno>.elasticbeanstalk.com\n\nOrden sugerido de ejecucion: Login, Usuarios, Proveedores, Clientes, Productos (carga del CSV), Ventas y Reportes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "cedula_cliente",
+      "value": "52123456",
+      "type": "string"
+    },
+    {
+      "key": "cedula_usuario",
+      "value": "1020304050",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Login",
+      "description": "Modulo de Login del sistema (HU-001).",
+      "item": [
+        {
+          "name": "Ingreso correcto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/usuarios/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "login"
+              ]
+            },
+            "description": "SP1-QA-1: ingreso con el usuario inicial.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"admininicial\",\n  \"password\": \"admin123456\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ingreso incorrecto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/usuarios/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "login"
+              ]
+            },
+            "description": "SP1-QA-2: debe responder 401 con mensaje de error.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"admininicial\",\n  \"password\": \"clave-errada\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estado del usuario inicial",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios/usuario-inicial-activo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "usuario-inicial-activo"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Usuarios",
+      "description": "Modulo de Gestion de Usuarios (HU-002 a HU-005).",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios/listar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "listar"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por identificador",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios/consultar/{{cedula_usuario}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "consultar",
+                "{{cedula_usuario}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Guardar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/usuarios/guardar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "guardar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula_usuario\": 1020304050,\n  \"nombre_usuario\": \"Juan Perez Gomez\",\n  \"email_usuario\": \"juan.perez@tiendagenerica.com\",\n  \"usuario\": \"jperez\",\n  \"password\": \"clave12345\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/usuarios/actualizar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "actualizar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula_usuario\": 1020304050,\n  \"nombre_usuario\": \"Juan Perez Gomez\",\n  \"email_usuario\": \"juan.perez@tiendagenerica.com\",\n  \"usuario\": \"jperez\",\n  \"password\": \"clave12345\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios/eliminar/{{cedula_usuario}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "eliminar",
+                "{{cedula_usuario}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 - Clientes",
+      "description": "Modulo de Gestion de Clientes (HU-006 a HU-009).",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/listar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "listar"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por identificador",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/consultar/{{cedula_cliente}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "consultar",
+                "{{cedula_cliente}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Guardar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes/guardar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "guardar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula_cliente\": 52123456,\n  \"nombre_cliente\": \"Maria Lopez Diaz\",\n  \"direccion_cliente\": \"Calle 45 No 12-34\",\n  \"telefono_cliente\": \"3109876543\",\n  \"email_cliente\": \"maria.lopez@correo.com\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes/actualizar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "actualizar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula_cliente\": 52123456,\n  \"nombre_cliente\": \"Maria Lopez Diaz\",\n  \"direccion_cliente\": \"Calle 45 No 12-34\",\n  \"telefono_cliente\": \"3109876543\",\n  \"email_cliente\": \"maria.lopez@correo.com\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/eliminar/{{cedula_cliente}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "eliminar",
+                "{{cedula_cliente}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 - Proveedores",
+      "description": "Modulo de Gestion de Proveedores (HU-010 a HU-013).",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/proveedores/listar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "listar"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por identificador",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/proveedores/consultar/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "consultar",
+                "1"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Guardar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/proveedores/guardar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "guardar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nitproveedor\": 1,\n  \"nombre_proveedor\": \"Proveedor 1 SAS\",\n  \"direccion_proveedor\": \"Carrera 15 No 80-25\",\n  \"telefono_proveedor\": \"6017654321\",\n  \"ciudad_proveedor\": \"Bogota\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/proveedores/actualizar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "actualizar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nitproveedor\": 1,\n  \"nombre_proveedor\": \"Proveedor 1 SAS\",\n  \"direccion_proveedor\": \"Carrera 15 No 80-25\",\n  \"telefono_proveedor\": \"6017654321\",\n  \"ciudad_proveedor\": \"Bogota\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/proveedores/eliminar/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "eliminar",
+                "1"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05 - Productos",
+      "description": "Modulo de Gestion de Productos.",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos/listar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "listar"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por identificador",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos/consultar/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "consultar",
+                "1"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Guardar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/productos/guardar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "guardar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_producto\": 1,\n  \"nombre_producto\": \"Melocotones\",\n  \"nitproveedor\": 1,\n  \"precio_compra\": 25505,\n  \"ivacompra\": 19,\n  \"precio_venta\": 30351\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/productos/actualizar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "actualizar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_producto\": 1,\n  \"nombre_producto\": \"Melocotones\",\n  \"nitproveedor\": 1,\n  \"precio_compra\": 25505,\n  \"ivacompra\": 19,\n  \"precio_venta\": 30351\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos/eliminar/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "eliminar",
+                "1"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Cargar archivo CSV de productos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/productos/cargar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "cargar"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": "datos/productos.csv"
+                }
+              ]
+            },
+            "description": "HU-014: seleccione el archivo datos/productos.csv del repositorio."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "06 - Ventas",
+      "description": "Modulo de Gestion de Ventas (HU-015 a HU-020).",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/Ventas/listar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Ventas",
+                "listar"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por identificador",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/Ventas/consultar/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Ventas",
+                "consultar",
+                "1"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Guardar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/Ventas/guardar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Ventas",
+                "guardar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_venta\": 1,\n  \"cedula_cliente\": 52123456,\n  \"cedula_usuario\": 1020304050,\n  \"valor_venta\": 153989.0,\n  \"ivaventa\": 29257.91,\n  \"total_venta\": 183246.91\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/Ventas/actualizar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Ventas",
+                "actualizar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_venta\": 1,\n  \"cedula_cliente\": 52123456,\n  \"cedula_usuario\": 1020304050,\n  \"valor_venta\": 153989.0,\n  \"ivaventa\": 29257.91,\n  \"total_venta\": 183246.91\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/Ventas/eliminar/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Ventas",
+                "eliminar",
+                "1"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar venta completa (3 productos)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/Ventas/registrar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "Ventas",
+                "registrar"
+              ]
+            },
+            "description": "HU-015 a HU-020: calcula totales, genera el consecutivo y guarda la venta con su detalle.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula_cliente\": 52123456,\n  \"cedula_usuario\": 1020304050,\n  \"productos\": [\n    {\n      \"codigo_producto\": 1,\n      \"cantidad_producto\": 2\n    },\n    {\n      \"codigo_producto\": 10,\n      \"cantidad_producto\": 3\n    },\n    {\n      \"codigo_producto\": 15,\n      \"cantidad_producto\": 1\n    }\n  ]\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07 - Detalle de ventas",
+      "description": "Detalle de los productos vendidos en cada venta.",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/detalleventas/listar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalleventas",
+                "listar"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por identificador",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/detalleventas/consultar/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalleventas",
+                "consultar",
+                "1"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Guardar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalleventas/guardar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalleventas",
+                "guardar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_detalle_venta\": 1,\n  \"codigo_venta\": 1,\n  \"codigo_producto\": 1,\n  \"cantidad_producto\": 2,\n  \"valor_venta\": 30351.0,\n  \"valoriva\": 11533.38,\n  \"valor_total\": 60702.0\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/detalleventas/actualizar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalleventas",
+                "actualizar"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo_detalle_venta\": 1,\n  \"codigo_venta\": 1,\n  \"codigo_producto\": 1,\n  \"cantidad_producto\": 2,\n  \"valor_venta\": 30351.0,\n  \"valoriva\": 11533.38,\n  \"valor_total\": 60702.0\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/detalleventas/eliminar/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "detalleventas",
+                "eliminar",
+                "1"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "08 - Reportes",
+      "description": "Modulo de Consultas y Reportes (HU-021 a HU-023).",
+      "item": [
+        {
+          "name": "Listado de usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reportes/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reportes",
+                "usuarios"
+              ]
+            },
+            "description": "HU-021 / SP5-QA-1"
+          },
+          "response": []
+        },
+        {
+          "name": "Listado de clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reportes/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reportes",
+                "clientes"
+              ]
+            },
+            "description": "HU-022 / SP5-QA-2"
+          },
+          "response": []
+        },
+        {
+          "name": "Total de ventas por cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reportes/ventasporcliente",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reportes",
+                "ventasporcliente"
+              ]
+            },
+            "description": "HU-023 / SP5-QA-3"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

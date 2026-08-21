@@ -1,0 +1,108 @@
+name: Integracion Continua
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  JAVA_VERSION: '11'
+  JAVA_DISTRIBUTION: 'temurin'
+
+jobs:
+
+  backend:
+    name: Backend - compilacion y pruebas (H2)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: Compilar y ejecutar el conjunto de pruebas QA
+        working-directory: AppBackend
+        run: ./mvnw -B clean verify
+
+      - name: Publicar el informe de pruebas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informe-pruebas-backend
+          path: AppBackend/target/surefire-reports/
+          retention-days: 30
+
+      - name: Publicar el artefacto appbackend.jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: appbackend-jar
+          path: AppBackend/target/appbackend.jar
+          retention-days: 30
+
+  backend-mysql:
+    name: Backend - pruebas contra MySQL 8
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0.24
+        env:
+          MYSQL_ROOT_PASSWORD: admin123
+          MYSQL_DATABASE: tiendagenerica_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot -padmin123"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: Ejecutar el conjunto de pruebas QA contra MySQL 8.0.24
+        working-directory: AppBackend
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASSWORD: admin123
+        run: ./mvnw -B test -DargLine="-Dspring.profiles.active=mysql"
+
+  frontend:
+    name: Frontend - generacion del archivo WAR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: Compilar y empaquetar el WAR
+        working-directory: AppFrontend
+        run: ./mvnw -B clean package
+
+      - name: Publicar el artefacto ciclo3demo.war
+        uses: actions/upload-artifact@v4
+        with:
+          name: ciclo3demo-war
+          path: AppFrontend/target/ciclo3demo.war
+          retention-days: 30
