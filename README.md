@@ -47,6 +47,18 @@ Conforme a la Parte 4 del documento de especificación:
 
 ## Puesta en marcha
 
+### Opción 0 — Scripts de arranque en Windows (la más simple)
+
+Si las herramientas portables están en la carpeta `.tools/`, basta con:
+
+```
+iniciar.bat     levanta MySQL, el backend y Tomcat, y abre el navegador
+detener.bat     detiene los tres servicios
+```
+
+Los scripts compilan el proyecto la primera vez si aún no existen los artefactos.
+Si no hay herramientas portables, usan el `JAVA_HOME` y el MySQL del sistema.
+
 ### Opción 1 — Docker (la más rápida)
 
 ```bash
