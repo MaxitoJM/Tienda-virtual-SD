@@ -171,6 +171,10 @@ la API y los anexos con las evidencias de ejecución:
 - [Tienda-Generica-Virtual-Documento-de-Entrega.pdf](docs/Tienda-Generica-Virtual-Documento-de-Entrega.pdf)
 - [Tienda-Generica-Virtual-Documento-de-Entrega.docx](docs/Tienda-Generica-Virtual-Documento-de-Entrega.docx)
 
+Y la presentación de sustentación del proyecto:
+
+- [Tienda-Generica-Virtual-Sustentacion.pptx](docs/Tienda-Generica-Virtual-Sustentacion.pptx)
+
 ### Otros recursos
 
 | Recurso | Contenido |
