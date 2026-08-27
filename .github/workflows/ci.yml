@@ -33,29 +33,10 @@ jobs:
 
       - name: Resumen de cobertura
         if: always()
-        run: |
-          python - <<'FIN'
-          import csv, os
-          ruta = 'AppBackend/target/site/jacoco/jacoco.csv'
-          if not os.path.exists(ruta):
-              raise SystemExit(0)
-          filas = list(csv.DictReader(open(ruta, encoding='utf-8')))
-          def ratio(prefijo):
-              c = sum(int(f[prefijo + '_COVERED']) for f in filas)
-              m = sum(int(f[prefijo + '_MISSED']) for f in filas)
-              return c / (c + m) * 100 if c + m else 100.0
-          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as salida:
-              salida.write('## Cobertura del backend
-
-')
-              salida.write('| Metrica | Cobertura |
-|---|---|
-')
-              for nombre, prefijo in [('Instrucciones', 'INSTRUCTION'), ('Ramas', 'BRANCH'),
-                                      ('Lineas', 'LINE'), ('Metodos', 'METHOD')]:
-                  salida.write('| %s | %.1f%% |
-' % (nombre, ratio(prefijo)))
-          FIN
+        run: >-
+          python .github/scripts/resumen-cobertura.py
+          AppBackend/target/site/jacoco/jacoco.csv "el backend"
+          >> "$GITHUB_STEP_SUMMARY"
 
       - name: Publicar el informe de pruebas y de cobertura
         if: always()
@@ -127,6 +108,13 @@ jobs:
       - name: Compilar, probar y empaquetar el WAR
         working-directory: AppFrontend
         run: ./mvnw -B clean verify
+
+      - name: Resumen de cobertura
+        if: always()
+        run: >-
+          python .github/scripts/resumen-cobertura.py
+          AppFrontend/target/site/jacoco/jacoco.csv "el frontend"
+          >> "$GITHUB_STEP_SUMMARY"
 
       - name: Publicar el informe de pruebas y de cobertura
         if: always()
