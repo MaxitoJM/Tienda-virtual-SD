@@ -4,6 +4,17 @@ Cada caso de prueba del documento de especificación está automatizado como un 
 de prueba JUnit 5. El nombre del método contiene el identificador del caso, de manera
 que el conjunto de pruebas QA se autoverifica en cada compilación.
 
+## Resumen
+
+| Proyecto | Pruebas | Fallos | Cobertura de instrucciones | Cobertura de ramas |
+|---|---|---|---|---|
+| Backend | 73 | 0 | 86,9 % | 65,5 % |
+| Frontend | 68 | 0 | 96,1 % | 80,9 % |
+| **Total** | **141** | **0** | | |
+
+La compilación falla automáticamente si la cobertura desciende por debajo del umbral
+fijado para cada proyecto, de modo que no puede degradarse sin que nadie lo advierta.
+
 ## Ejecución
 
 ### Contra H2 (por defecto)
@@ -111,6 +122,36 @@ Escenario usado en `Sprint4VentasTest`:
 | | | | **Totales** | **10.000** | **1.620** |
 
 `Total Venta` = 10.000 · `Total IVA` = 1.620 · `Total con IVA` = **11.620**
+
+## Pruebas del frontend
+
+La aplicación de frontend cuenta con 68 pruebas propias. Se ejecutan contra un
+**backend simulado**: un servidor HTTP real, levantado en un puerto libre durante la
+prueba, que devuelve respuestas preparadas de antemano. De esta forma se ejercita el
+camino completo (cabeceras, cuerpos, códigos de estado y envío multipart) sin
+depender de que el backend esté en ejecución.
+
+| Clase de prueba | Qué verifica | Pruebas |
+|---|---|---|
+| `ApiClientTest` | Los cuatro métodos HTTP, el envío de archivos, la interpretación de respuestas y errores, y la resolución de la dirección del backend | 12 |
+| `ClienteServletTest` | El comportamiento común de los módulos CRUD: consultar, crear, actualizar, borrar y sus mensajes | 11 |
+| `ModulosCrudTest` | Que cada módulo apunte a su recurso y traslade todos los campos de su formulario | 5 |
+| `LoginServletTest` | Apertura y cierre de sesión, y el rechazo de credenciales incorrectas | 5 |
+| `ProductoServletTest` | La carga del archivo CSV y sus validaciones | 9 |
+| `VentaServletTest` | El cálculo por línea, las validaciones de cantidad y la confirmación de la venta | 12 |
+| `ReporteServletTest` | Los tres reportes y el mensaje cuando no hay registros | 7 |
+| `SesionFiltroTest` | Que ningún módulo sea accesible sin haber ingresado al sistema | 7 |
+
+## Cobertura de código
+
+La cobertura se mide con JaCoCo y se verifica en cada compilación. El informe en
+formato HTML queda en `target/site/jacoco/index.html` de cada proyecto, y también se
+publica como artefacto descargable en cada ejecución de la integración continua.
+
+```bash
+cd AppBackend  && ./mvnw clean verify
+cd AppFrontend && ./mvnw clean verify
+```
 
 ## Pruebas de aceptación end-to-end
 

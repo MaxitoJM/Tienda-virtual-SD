@@ -31,12 +31,40 @@ jobs:
         working-directory: AppBackend
         run: ./mvnw -B clean verify
 
-      - name: Publicar el informe de pruebas
+      - name: Resumen de cobertura
+        if: always()
+        run: |
+          python - <<'FIN'
+          import csv, os
+          ruta = 'AppBackend/target/site/jacoco/jacoco.csv'
+          if not os.path.exists(ruta):
+              raise SystemExit(0)
+          filas = list(csv.DictReader(open(ruta, encoding='utf-8')))
+          def ratio(prefijo):
+              c = sum(int(f[prefijo + '_COVERED']) for f in filas)
+              m = sum(int(f[prefijo + '_MISSED']) for f in filas)
+              return c / (c + m) * 100 if c + m else 100.0
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as salida:
+              salida.write('## Cobertura del backend
+
+')
+              salida.write('| Metrica | Cobertura |
+|---|---|
+')
+              for nombre, prefijo in [('Instrucciones', 'INSTRUCTION'), ('Ramas', 'BRANCH'),
+                                      ('Lineas', 'LINE'), ('Metodos', 'METHOD')]:
+                  salida.write('| %s | %.1f%% |
+' % (nombre, ratio(prefijo)))
+          FIN
+
+      - name: Publicar el informe de pruebas y de cobertura
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: informe-pruebas-backend
-          path: AppBackend/target/surefire-reports/
+          path: |
+            AppBackend/target/surefire-reports/
+            AppBackend/target/site/jacoco/
           retention-days: 30
 
       - name: Publicar el artefacto appbackend.jar
@@ -83,7 +111,7 @@ jobs:
         run: ./mvnw -B test -DargLine="-Dspring.profiles.active=mysql"
 
   frontend:
-    name: Frontend - generacion del archivo WAR
+    name: Frontend - pruebas y generacion del archivo WAR
     runs-on: ubuntu-latest
     steps:
       - name: Descargar el codigo
@@ -96,9 +124,19 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
-      - name: Compilar y empaquetar el WAR
+      - name: Compilar, probar y empaquetar el WAR
         working-directory: AppFrontend
-        run: ./mvnw -B clean package
+        run: ./mvnw -B clean verify
+
+      - name: Publicar el informe de pruebas y de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informe-pruebas-frontend
+          path: |
+            AppFrontend/target/surefire-reports/
+            AppFrontend/target/site/jacoco/
+          retention-days: 30
 
       - name: Publicar el artefacto ciclo3demo.war
         uses: actions/upload-artifact@v4

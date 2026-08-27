@@ -4,7 +4,8 @@
 [![Java](https://img.shields.io/badge/Java-11-007396)](https://adoptium.net/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.4.5-6DB33F)](https://spring.io/projects/spring-boot)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0.24-4479A1)](https://www.mysql.com/)
-[![Pruebas](https://img.shields.io/badge/pruebas-51%20QA-success)](docs/04-plan-de-pruebas.md)
+[![Pruebas](https://img.shields.io/badge/pruebas-141-success)](docs/04-plan-de-pruebas.md)
+[![Cobertura](https://img.shields.io/badge/cobertura-87%25%20%C2%B7%2096%25-success)](docs/04-plan-de-pruebas.md)
 
 Software para gestionar las transacciones comerciales de una tienda de propósito
 general: usuarios, clientes, proveedores, productos, ventas y reportes.
@@ -123,13 +124,25 @@ Se desactiva automáticamente al crear el primer usuario desde el módulo de usu
 ## Pruebas
 
 ```bash
-cd AppBackend && ./mvnw test
+cd AppBackend  && ./mvnw clean verify
+cd AppFrontend && ./mvnw clean verify
 ```
 
-51 pruebas automatizadas que cubren los 43 casos del conjunto de pruebas QA del
-documento. Cada método de prueba lleva el identificador de su caso
-(`sp1QA3_creacionDeUsuarioCorrecta`, `sp4QA9_validacionDelTotalConIva`, …).
-Por defecto usan H2 en modo de compatibilidad MySQL, así que no requieren MySQL.
+| Proyecto | Pruebas | Cobertura de instrucciones |
+|---|---|---|
+| Backend | 73 | 86,9 % |
+| Frontend | 68 | 96,1 % |
+
+Las del backend cubren los 43 casos del conjunto de pruebas QA del documento; cada
+método lleva el identificador de su caso (`sp1QA3_creacionDeUsuarioCorrecta`,
+`sp4QA9_validacionDelTotalConIva`, …). Usan H2 en modo de compatibilidad MySQL, así
+que no requieren una instancia de MySQL.
+
+Las del frontend se ejecutan contra un backend simulado sobre HTTP real, sin depender
+de que el backend esté en ejecución.
+
+La compilación falla si la cobertura desciende por debajo del umbral fijado. El informe
+queda en `target/site/jacoco/index.html` de cada proyecto.
 
 El mismo conjunto puede ejecutarse contra una instancia real de MySQL 8:
 
