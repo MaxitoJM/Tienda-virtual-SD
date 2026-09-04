@@ -1,14 +1,18 @@
 # Entorno local completo de la Tienda Generica Virtual.
 # Reproduce la arquitectura desplegada en AWS:
-#   MySQL (RDS) + backend Spring Boot (Elastic Beanstalk Java)
-#   + frontend WAR sobre Tomcat 9 (Elastic Beanstalk Tomcat)
+#   MySQL 8.4 (RDS) + backend Spring Boot + frontend WAR sobre Tomcat 9
+#
+# La version de MySQL se mantiene igual a la de RDS a proposito, para que
+# el entorno local y el desplegado no difieran en el motor de base de datos.
 
 services:
 
   mysql:
-    image: mysql:8.0.24
+    image: mysql:8.4
     container_name: tienda-mysql
-    command: --default-authentication-plugin=mysql_native_password
+    # MySQL 8.4 elimino el complemento mysql_native_password y la opcion
+    # --default-authentication-plugin, asi que no se define ninguna: el
+    # servidor usa caching_sha2_password, que el conector 8.4.0 soporta.
     environment:
       MYSQL_ROOT_PASSWORD: admin123
       MYSQL_DATABASE: tiendagenerica

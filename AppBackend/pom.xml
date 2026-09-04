@@ -22,6 +22,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <springfox.version>3.0.0</springfox.version>
     <jacoco.version>0.8.8</jacoco.version>
+    <mysql.connector.version>8.4.0</mysql.connector.version>
   </properties>
 
   <dependencies>
@@ -51,9 +52,17 @@
       <version>${springfox.version}</version>
     </dependency>
 
+    <!--
+      Conector oficial de MySQL. Se usa la coordenada nueva
+      (com.mysql:mysql-connector-j); la antigua mysql:mysql-connector-java
+      quedo descontinuada. Spring Boot 2.4.5 solo gestiona la version de la
+      coordenada antigua, por eso esta necesita <version> explicita.
+      La version 8.4.0 es la que corresponde al servidor MySQL 8.4 de RDS.
+    -->
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+      <version>${mysql.connector.version}</version>
       <scope>runtime</scope>
     </dependency>
 
