@@ -1,0 +1,212 @@
+#!/bin/bash
+# ============================================================
+#  Aprovisionamiento de la instancia de aplicacion.
+#
+#  Deja tres unidades de systemd:
+#    tienda-config.service  (oneshot) vuelca SSM a los EnvironmentFile
+#    appbackend.service     backend Spring Boot en el puerto 5000
+#    tomcat.service         Tomcat 9 con el frontend en el puerto 8080
+#
+#  Los dos servicios de aplicacion descargan su artefacto del bucket de
+#  S3 antes de arrancar. Si el artefacto todavia no esta subido, la
+#  unidad falla y systemd reintenta cada 15 segundos: en cuanto se sube,
+#  el servicio arranca solo, sin tocar la instancia.
+#
+#  ATENCION: este archivo lo procesa la funcion templatefile() antes de
+#  llegar a la instancia. Solo se sustituyen los cinco nombres que se le
+#  pasan y que se recogen justo debajo, en el bloque de constantes. Las
+#  variables del interprete de ordenes se escriben sin llaves para que no
+#  choquen con esa sustitucion.
+# ============================================================
+set -euxo pipefail
+exec > >(tee /var/log/aprovisionamiento.log) 2>&1
+
+REGION="${region}"
+PREFIJO="${prefijo_ssm}"
+BUCKET="${bucket_artefactos}"
+TOMCAT_VER="${version_tomcat}"
+XMX="${memoria_maxima_jvm}"
+
+# ---------- 1. Paquetes ----------
+dnf -y update
+dnf -y install java-11-amazon-corretto-headless tar gzip
+
+# La ruta exacta del JDK depende de la arquitectura del paquete, asi que
+# se resuelve ahora y se escribe literal en las unidades de systemd:
+# systemd no admite variables en la ruta del ejecutable de ExecStart.
+JAVA_BIN=$(readlink -f "$(command -v java)")
+JAVA_HOME=$(dirname "$(dirname "$JAVA_BIN")")
+
+# ---------- 2. Usuarios de servicio ----------
+id appbackend &>/dev/null || useradd --system --shell /sbin/nologin --home-dir /opt/appbackend appbackend
+id tomcat     &>/dev/null || useradd --system --shell /sbin/nologin --home-dir /opt/tomcat tomcat
+
+install -d -o appbackend -g appbackend -m 0755 /opt/appbackend
+
+# ---------- 3. Apache Tomcat 9 ----------
+TARBALL="apache-tomcat-$TOMCAT_VER.tar.gz"
+BASE_TOMCAT="https://archive.apache.org/dist/tomcat/tomcat-9/v$TOMCAT_VER/bin/$TARBALL"
+curl -fsSL -o "/tmp/$TARBALL"        "$BASE_TOMCAT"
+curl -fsSL -o "/tmp/$TARBALL.sha512" "$BASE_TOMCAT.sha512"
+
+# Comprueba que la descarga no se corrompio. El archivo de suma nombra al
+# tarball original, por eso se conserva su nombre. La suma viene del mismo
+# servidor, asi que no es una garantia de cadena de suministro; para eso
+# habria que verificar la firma PGP contra las claves del proyecto.
+( cd /tmp && sha512sum -c "$TARBALL.sha512" )
+
+install -d -o tomcat -g tomcat -m 0755 /opt/tomcat
+tar -xzf "/tmp/$TARBALL" -C /opt/tomcat --strip-components=1
+rm -rf /opt/tomcat/webapps/*
+rm -f "/tmp/$TARBALL" "/tmp/$TARBALL.sha512"
+chown -R tomcat:tomcat /opt/tomcat
+find /opt/tomcat/bin -name '*.sh' -exec chmod 0750 {} +
+
+# ---------- 4. Volcado de SSM a los EnvironmentFile ----------
+# systemd lee los EnvironmentFile como root, antes de bajar privilegios,
+# de modo que los que llevan secretos pueden quedar en 0600. El directorio
+# si debe ser atravesable: tienda-artefactos.sh corre ya como el usuario
+# del servicio y lee artefactos.env, que no contiene ningun secreto.
+install -d -m 0755 /etc/tienda
+
+cat > /usr/local/sbin/tienda-configurar.sh <<'GUION'
+#!/bin/bash
+# Lee los parametros del proyecto en SSM y escribe los dos
+# EnvironmentFile que consumen las unidades de systemd. Se ejecuta en
+# cada arranque, de modo que cambiar un parametro y reiniciar la
+# instancia basta para aplicar la nueva configuracion.
+set -euo pipefail
+umask 077
+
+REGION="__REGION__"
+PREFIJO="__PREFIJO__"
+
+parametro() {
+  aws ssm get-parameter --region "$REGION" --name "$PREFIJO/$1" \
+      --with-decryption --query Parameter.Value --output text
+}
+
+# Las comillas simples que rodean cada valor las interpreta systemd, no
+# el interprete de ordenes: protegen los simbolos de las contrasenas.
+cat > /etc/tienda/backend.env <<FIN
+SPRING_PROFILES_ACTIVE='aws'
+DB_HOST='$(parametro db/host)'
+DB_PORT='$(parametro db/port)'
+DB_NAME='$(parametro db/name)'
+DB_USER='$(parametro db/user)'
+DB_PASSWORD='$(parametro db/password)'
+SERVER_PORT='$(parametro app/server-port)'
+FIN
+
+cat > /etc/tienda/tomcat.env <<FIN
+BACKEND_URL='$(parametro app/backend-url)'
+CATALINA_OPTS='-Xmx__XMX__ -Xms256m -Djava.security.egd=file:/dev/./urandom'
+FIN
+
+cat > /etc/tienda/artefactos.env <<FIN
+BUCKET_ARTEFACTOS='$(parametro app/artifacts-bucket)'
+REGION='$REGION'
+FIN
+
+chmod 0600 /etc/tienda/backend.env /etc/tienda/tomcat.env
+chmod 0644 /etc/tienda/artefactos.env
+GUION
+
+sed -i "s|__REGION__|$REGION|g;  s|__PREFIJO__|$PREFIJO|g;  s|__XMX__|$XMX|g" \
+    /usr/local/sbin/tienda-configurar.sh
+chmod 0750 /usr/local/sbin/tienda-configurar.sh
+
+# ---------- 5. Descarga de artefactos ----------
+cat > /usr/local/sbin/tienda-artefactos.sh <<'GUION'
+#!/bin/bash
+# Descarga del bucket de S3 el artefacto que pide el servicio que va a
+# arrancar. Se ejecuta como ExecStartPre, asi que cada reintento de
+# systemd vuelve a intentar la descarga.
+set -euo pipefail
+. /etc/tienda/artefactos.env
+
+case "$1" in
+  jar) aws s3 cp "s3://$BUCKET_ARTEFACTOS/appbackend.jar" \
+                 /opt/appbackend/appbackend.jar --region "$REGION" ;;
+  war) aws s3 cp "s3://$BUCKET_ARTEFACTOS/ciclo3demo.war" \
+                 /opt/tomcat/webapps/ciclo3demo.war --region "$REGION" ;;
+  *)   echo "Uso: $0 {jar|war}" >&2; exit 2 ;;
+esac
+GUION
+chmod 0755 /usr/local/sbin/tienda-artefactos.sh
+
+# ---------- 6. Unidades de systemd ----------
+cat > /etc/systemd/system/tienda-config.service <<'UNIDAD'
+[Unit]
+Description=Configuracion de la Tienda Generica Virtual desde SSM Parameter Store
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/tienda-configurar.sh
+
+[Install]
+WantedBy=multi-user.target
+UNIDAD
+
+cat > /etc/systemd/system/appbackend.service <<UNIDAD
+[Unit]
+Description=Backend REST de la Tienda Generica Virtual
+After=network-online.target tienda-config.service
+Requires=tienda-config.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=appbackend
+Group=appbackend
+WorkingDirectory=/opt/appbackend
+EnvironmentFile=/etc/tienda/backend.env
+ExecStartPre=/usr/local/sbin/tienda-artefactos.sh jar
+ExecStart=$JAVA_HOME/bin/java -Xmx$XMX -Xms256m -jar /opt/appbackend/appbackend.jar
+Restart=always
+RestartSec=15
+
+# Endurecimiento basico del servicio
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ProtectHome=yes
+
+[Install]
+WantedBy=multi-user.target
+UNIDAD
+
+cat > /etc/systemd/system/tomcat.service <<UNIDAD
+[Unit]
+Description=Apache Tomcat 9 con el frontend de la Tienda Generica Virtual
+After=network-online.target tienda-config.service
+Requires=tienda-config.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=forking
+User=tomcat
+Group=tomcat
+Environment=JAVA_HOME=$JAVA_HOME
+Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid
+EnvironmentFile=/etc/tienda/tomcat.env
+ExecStartPre=/usr/local/sbin/tienda-artefactos.sh war
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+Restart=on-failure
+RestartSec=15
+
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
+UNIDAD
+
+# ---------- 7. Arranque ----------
+systemctl daemon-reload
+systemctl enable --now tienda-config.service
+systemctl enable --now appbackend.service
+systemctl enable --now tomcat.service

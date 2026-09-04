@@ -1,0 +1,8 @@
+# Copiar a backend.hcl. Mismo bucket que el modulo raiz, otra clave.
+# backend.hcl no se versiona.
+#
+#     terraform init -backend-config=backend.hcl
+
+bucket = "tienda-virtual-estado-XXXXXXXX"
+key    = "prod/db-bootstrap.tfstate"
+region = "us-east-1"

@@ -1,0 +1,8 @@
+# Copiar a backend.hcl y sustituir el nombre del bucket por el que
+# imprime bootstrap/crear-bucket-estado.sh. backend.hcl no se versiona.
+#
+#     terraform init -backend-config=backend.hcl
+
+bucket = "tienda-virtual-estado-XXXXXXXX"
+key    = "prod/infra.tfstate"
+region = "us-east-1"

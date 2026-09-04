@@ -27,3 +27,15 @@ datos-h2/
 # Artefactos de despliegue generados
 despliegue/*.zip
 despliegue/*.war
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+!*.tfvars.example
+crash.log
+crash.*.log
+backend.hcl
+# .terraform.lock.hcl SI se versiona: fija las versiones exactas de los
+# proveedores para que todo el equipo resuelva las mismas.

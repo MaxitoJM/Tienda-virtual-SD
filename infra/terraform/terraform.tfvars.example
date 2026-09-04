@@ -1,0 +1,16 @@
+# Copiar a terraform.tfvars y ajustar lo que haga falta. Los valores por
+# defecto de variables.tf ya describen la arquitectura acordada, asi que
+# este archivo solo es necesario para desviarse de ellos.
+#
+# terraform.tfvars NO se versiona (ver .gitignore).
+
+# region   = "us-east-1"
+# proyecto = "tienda-virtual"
+# entorno  = "prod"
+
+# Restringir el acceso al frontend durante las pruebas:
+# cidr_acceso_web = ["203.0.113.10/32"]
+
+# Conservar los datos al destruir la infraestructura:
+# omitir_instantanea_final = false
+# proteccion_borrado_bd    = true
