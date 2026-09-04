@@ -2,9 +2,9 @@ name: Integracion Continua
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, prod ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, prod ]
   workflow_dispatch:
 
 env:

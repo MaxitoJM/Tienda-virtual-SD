@@ -3,7 +3,7 @@
 [![Integracion Continua](https://github.com/MaxitoJM/Tienda-virtual-SD/actions/workflows/ci.yml/badge.svg)](https://github.com/MaxitoJM/Tienda-virtual-SD/actions/workflows/ci.yml)
 [![Java](https://img.shields.io/badge/Java-11-007396)](https://adoptium.net/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.4.5-6DB33F)](https://spring.io/projects/spring-boot)
-[![MySQL](https://img.shields.io/badge/MySQL-8.0.24-4479A1)](https://www.mysql.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.4-4479A1)](https://www.mysql.com/)
 [![Pruebas](https://img.shields.io/badge/pruebas-141-success)](docs/04-plan-de-pruebas.md)
 [![Cobertura](https://img.shields.io/badge/cobertura-87%25%20%C2%B7%2096%25-success)](docs/04-plan-de-pruebas.md)
 
@@ -25,7 +25,7 @@ Dos aplicaciones desplegables por separado, comunicadas por HTTP/REST:
                   AppBackend (Spring Boot, JAR ejecutable, :5000)
                         │  JDBC
                         ▼
-                  MySQL 8.0.24  ·  base de datos "tiendagenerica"
+                  MySQL 8.4  ·  base de datos "tiendagenerica"
 ```
 
 ## Stack tecnológico
@@ -38,7 +38,7 @@ Conforme a la Parte 4 del documento de especificación:
 | Framework | Spring Boot 2.4.5 |
 | Gestor de dependencias | Maven 3.6+ (incluido vía Maven Wrapper) |
 | Servidor de aplicaciones | Apache Tomcat 9 |
-| Base de datos | MySQL 8.0.24 |
+| Base de datos | MySQL 8.4 |
 | Documentación de API | Swagger UI (springfox 3.0.0) |
 | Pruebas | JUnit 5 + Spring MockMvc + H2 |
 
@@ -73,7 +73,7 @@ Si no hay herramientas portables, usan el `JAVA_HOME` y el MySQL del sistema.
 docker compose up --build
 ```
 
-Levanta MySQL 8.0.24, el backend y Tomcat 9 con el frontend ya desplegado.
+Levanta MySQL 8.4, el backend y Tomcat 9 con el frontend ya desplegado.
 
 > **Requisito en Windows.** Docker Desktop necesita el subsistema WSL 2 con una
 > distribución instalada. Si `docker compose up` no responde, ejecute en una terminal
@@ -151,7 +151,7 @@ cd AppBackend && ./mvnw test -DargLine="-Dspring.profiles.active=mysql"
 ```
 
 Usa la base de datos `tiendagenerica_test`, independiente de la de trabajo.
-Verificado sobre MySQL 8.0.24: 51 pruebas, 0 fallos.
+Verificado sobre MySQL 8.4.
 
 ## Primer recorrido por el sistema
 
@@ -196,7 +196,8 @@ Y la presentación de sustentación del proyecto:
 | [Colección de Postman](postman/) | 38 peticiones de la API organizadas por sprint |
 | [Diagramas](docs/diagramas/) | Arquitectura, modelo entidad-relación, flujo de venta y diagrama de clases |
 | [Evidencias](docs/evidencias/) | Capturas del sistema en ejecución |
-| [Despliegue](despliegue/LEEME.md) | Guía de publicación en AWS Elastic Beanstalk |
+| [Despliegue](infra/terraform/README.md) | Infraestructura en AWS con Terraform (camino oficial) |
+| [Despliegue histórico](despliegue/LEEME.md) | Guía anterior de publicación en Elastic Beanstalk |
 
 ## Decisiones de implementación
 
@@ -204,6 +205,15 @@ Y la presentación de sustentación del proyecto:
   Es la única desviación respecto del documento, que muestra la contraseña en el
   listado de usuarios; se revierte poniendo
   `tienda.reportes.enmascarar-password=false` en `application.properties`.
+- **Base de datos MySQL 8.4 en lugar de 8.0.24.** Es la segunda desviación
+  respecto del documento. El soporte estándar de MySQL 8.0 en Amazon RDS terminó
+  el **31 de julio de 2026**, y desde el **1 de agosto de 2026** las instancias
+  que sigan en 8.0 generan cargos de *Extended Support* facturados por
+  vCPU-hora. El entorno local (`docker-compose.yml`) y la integración continua
+  usan la misma versión que RDS para que no difieran en el motor. Implica el
+  conector `com.mysql:mysql-connector-j` 8.4.0 y la desaparición de
+  `mysql_native_password`, eliminado en 8.4. Detalle en
+  [docs/07](docs/07-despliegue-aws.md#por-qué-mysql-84-y-no-8024).
 - **Rutas de la API literales al documento**, incluida `/Ventas` con V mayúscula.
 - **Carga de productos todo o nada**: la tabla solo se reemplaza si el archivo
   completo es válido.

@@ -38,7 +38,8 @@ que no toca los datos de `tiendagenerica`). La configuración está en
 `src/test/resources/application-mysql.properties` y admite las variables de entorno
 `DB_HOST`, `DB_PORT`, `DB_USER` y `DB_PASSWORD`.
 
-Resultado verificado sobre **MySQL 8.0.24**: **51 pruebas, 0 fallos**.
+Resultado verificado sobre **MySQL 8.4**, la misma versión de RDS y del
+contenedor de `docker-compose`.
 
 ## Sprint 1 — Login y Usuarios
 

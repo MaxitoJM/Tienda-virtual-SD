@@ -37,5 +37,7 @@ despliegue/*.war
 crash.log
 crash.*.log
 backend.hcl
+*.tfplan
+apply.log
 # .terraform.lock.hcl SI se versiona: fija las versiones exactas de los
 # proveedores para que todo el equipo resuelva las mismas.

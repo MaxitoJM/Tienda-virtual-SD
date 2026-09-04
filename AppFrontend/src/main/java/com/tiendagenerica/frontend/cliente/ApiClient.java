@@ -28,8 +28,10 @@ import java.util.UUID;
  *   2. propiedad de sistema backend.url
  *   3. valor por defecto http://localhost:5000
  *
- * De esta forma, al desplegar en Elastic Beanstalk basta con definir la
- * variable de entorno con la URL del entorno de backend, sin recompilar.
+ * De esta forma, cambiar de entorno no exige recompilar: basta con definir la
+ * variable. En el despliegue de AWS la define la unidad tomcat.service a partir
+ * de un parametro de SSM, y vale http://localhost:5000 porque el backend corre
+ * en la misma instancia.
  */
 public class ApiClient {
 

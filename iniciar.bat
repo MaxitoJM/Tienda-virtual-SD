@@ -30,7 +30,7 @@ REM ---------- 2. Base de datos MySQL ----------
 if exist "%RAIZ%\.tools\mysql8\bin\mysqld.exe" (
     tasklist /FI "IMAGENAME eq mysqld.exe" 2>nul | find /I "mysqld.exe" >nul
     if errorlevel 1 (
-        echo [2/4] Iniciando MySQL 8.0.24 en el puerto 3306...
+        echo [2/4] Iniciando MySQL 8.4 en el puerto 3306...
         start "MySQL" /min "%RAIZ%\.tools\mysql8\bin\mysqld.exe" --defaults-file="%RAIZ%\.tools\mysql8\my.ini"
         timeout /t 12 /nobreak >nul
     ) else (

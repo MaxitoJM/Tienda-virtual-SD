@@ -1,6 +1,6 @@
 # 5. Especificación de Diseño de la Base de Datos
 
-Base de datos: **`tiendagenerica`** (MySQL 8.0.24).
+Base de datos: **`tiendagenerica`** (MySQL 8.4).
 
 ## Modelo entidad-relación
 

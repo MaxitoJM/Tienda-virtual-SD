@@ -1,4 +1,11 @@
-# Despliegue en AWS Elastic Beanstalk
+# Despliegue en AWS Elastic Beanstalk (histórico)
+
+> **Este ya no es el camino de despliegue del proyecto.** La infraestructura
+> vigente se administra con Terraform: consulte
+> [`infra/terraform/README.md`](../infra/terraform/README.md). Esta guía se
+> conserva porque documenta el procedimiento seguido durante el ciclo
+> académico, y describe MySQL 8.0.24 y instancias `t2.micro`, ya sustituidos.
+
 
 Esta carpeta recibe los dos artefactos listos para subir. Se generan ejecutando en la
 raíz del proyecto:
