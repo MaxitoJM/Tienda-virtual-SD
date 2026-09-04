@@ -197,7 +197,7 @@ Y la presentación de sustentación del proyecto:
 | [Diagramas](docs/diagramas/) | Arquitectura, modelo entidad-relación, flujo de venta y diagrama de clases |
 | [Evidencias](docs/evidencias/) | Capturas del sistema en ejecución |
 | [Despliegue](infra/terraform/README.md) | Infraestructura en AWS con Terraform (camino oficial) |
-| [Despliegue histórico](despliegue/LEEME.md) | Guía anterior de publicación en Elastic Beanstalk |
+| [Flujo de publicación](despliegue/LEEME.md) | De la rama `prod` a la aplicación en marcha: compilación, S3 y servicios |
 
 ## Decisiones de implementación
 

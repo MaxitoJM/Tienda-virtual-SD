@@ -262,8 +262,10 @@ Genera en la carpeta `despliegue/`:
 | `appbackend-eb.zip` | Plataforma Java |
 | `ciclo3demo.war` | Plataforma Tomcat |
 
-El detalle de las propiedades que hay que definir en cada entorno está en
-[`despliegue/LEEME.md`](../despliegue/LEEME.md).
+El detalle de las propiedades que había que definir en cada entorno estaba en
+`despliegue/LEEME.md`; ese archivo describe hoy el flujo de publicación vigente,
+así que las propiedades de Elastic Beanstalk quedan recogidas en el apartado 6
+de este mismo anexo.
 
 Quien prefiera hacerlo manualmente puede seguir los pasos siguientes.
 

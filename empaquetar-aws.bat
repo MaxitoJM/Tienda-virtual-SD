@@ -91,8 +91,9 @@ echo.
 echo   Suba appbackend-eb.zip al entorno de plataforma Java.
 echo   Suba ciclo3demo.war    al entorno de plataforma Tomcat.
 echo.
-echo   Antes de desplegar, defina en cada entorno las propiedades
-echo   descritas en despliegue\LEEME.md
+echo   AVISO: este es el camino historico por Elastic Beanstalk.
+echo   El despliegue vigente usa Terraform y S3: vea despliegue\LEEME.md
+echo   Las propiedades de cada entorno estan en docs\07-despliegue-aws.md
 echo ===================================================
 echo.
 pause
